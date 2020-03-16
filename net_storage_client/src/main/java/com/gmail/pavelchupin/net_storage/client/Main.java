@@ -42,11 +42,22 @@ public class Main extends Application {
             Socket socket = new Socket(prop.getProperty(SERVER_URL),Integer.parseInt(prop.getProperty(SERVER_PORT)));
             in = new DataInputStream(socket.getInputStream());
             out = new DataOutputStream(socket.getOutputStream());
+            Thread readThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        System.out.println(in.readUTF());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            readThread.setDaemon(true);
+            readThread.start();
+
             while (true){
                 String text = new BufferedReader(new InputStreamReader(System.in)).readLine();
-
                 out.writeUTF(text);
-
                 //System.out.println(in.readUTF());
             }
         } catch (IOException e) {

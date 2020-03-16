@@ -22,16 +22,65 @@ public class ClientHandler implements Runnable {
 
     @Override
     public void run() {
-        try {
-            while (true) {
-                String mess = null;
-                mess = in.readUTF();
-                System.out.println(mess);
+        //Запускаем поток по чтению данных из потока от клиента
+        Thread readThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    readMess();
+                } catch (IOException e) {
+                    closeConnection();
+                }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        });
+        readThread.setDaemon(true);
+        readThread.start();
+
+        //Запускаем поток по записи данных в поток для клиента
+        /*Thread writeThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+
+                    writeMess();
+                } catch (IOException e) {
+                    closeConnection();
+                }
+            }
+        });*/
+        //writeThread.setDaemon(true);
+        //writeThread.start();
+
+
+        while (true) {
+
         }
+    }
 
+    private void writeMess(String mess) throws IOException {
+        out.writeUTF(mess);
+    }
 
+    private void readMess() throws IOException {
+        String mess = null;
+        while (true) {
+            mess = in.readUTF();
+            System.out.println(mess);
+
+            if ("W".equalsIgnoreCase(mess.split(" ")[0]))
+            {
+                writeMess("ok");
+            }
+        }
+    }
+
+    private void closeConnection() {
+        if (!socket.isClosed()) {
+            try {
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
