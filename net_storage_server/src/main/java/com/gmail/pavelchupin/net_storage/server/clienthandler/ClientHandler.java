@@ -68,7 +68,7 @@ public class ClientHandler implements Runnable {
             mess = in.readUTF();
 
             System.out.println(mess);
-            System.out.println(mess.replaceFirst(Operations.UPLOAD.toString(), ""));
+            //System.out.println(mess.replaceFirst(Operations.UPLOAD.toString(), ""));
 
             //Если прилетел запрос на закачку файла на сервер
             if (mess.startsWith(Operations.UPLOAD.toString())) {
@@ -85,7 +85,7 @@ public class ClientHandler implements Runnable {
             else if (mess.startsWith(Operations.DOWNLOAD.toString())) {
 
             } //Если прилетел запрос на дерево каталогов.
-            else if (mess.startsWith(Operations.DOWNLOAD.toString())) {
+            else if (mess.startsWith(Operations.DIR.toString())) {
 
             }
         }
