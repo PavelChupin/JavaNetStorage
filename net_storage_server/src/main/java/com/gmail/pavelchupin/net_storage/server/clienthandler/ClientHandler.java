@@ -1,10 +1,10 @@
 package com.gmail.pavelchupin.net_storage.server.clienthandler;
 
+import com.gmail.pavelchupin.net_storage.common.files.FileSerializable;
+import com.gmail.pavelchupin.net_storage.common.oper.Operations;
 import com.gmail.pavelchupin.net_storage.server.Server;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 
 public class ClientHandler implements Runnable {
@@ -12,6 +12,7 @@ public class ClientHandler implements Runnable {
     private Socket socket;
     private DataInputStream in;
     private DataOutputStream out;
+    private String login = "user";
 
     public ClientHandler(Socket socket, Server server) throws IOException {
         this.server = server;
@@ -27,7 +28,7 @@ public class ClientHandler implements Runnable {
             Thread authorizationClient = new Thread(new Runnable() {
                 @Override
                 public void run() {
-
+                    //TO DO
                 }
             });
             authorizationClient.start();
@@ -40,6 +41,10 @@ public class ClientHandler implements Runnable {
                     try {
                         readMess();
                     } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    } finally {
                         closeConnection();
                     }
                 }
@@ -57,25 +62,45 @@ public class ClientHandler implements Runnable {
         out.writeUTF(mess);
     }
 
-    private void readMess() throws IOException {
+    private void readMess() throws IOException, ClassNotFoundException {
         String mess = null;
         while (true) {
             mess = in.readUTF();
-            System.out.println(mess);
 
-            if ("W".equalsIgnoreCase(mess.split(" ")[0])) {
-                writeMess("ok");
+            System.out.println(mess);
+            System.out.println(mess.replaceFirst(Operations.UPLOAD.toString(), ""));
+
+            //Если прилетел запрос на закачку файла на сервер
+            if (mess.startsWith(Operations.UPLOAD.toString())) {
+                ByteArrayInputStream byteIn = new ByteArrayInputStream(mess.replaceFirst(Operations.UPLOAD.toString(), "").getBytes());
+                ObjectInputStream objIn = new ObjectInputStream(byteIn);
+                FileSerializable file = (FileSerializable) objIn.readObject();
+
+                //Сохраняем файл на сервере
+                server.saveFileToServer(file, this);
+
+                objIn.close();
+                byteIn.close();
+            } //Если прилетел запрос на скачку файла
+            else if (mess.startsWith(Operations.DOWNLOAD.toString())) {
+
+            } //Если прилетел запрос на дерево каталогов.
+            else if (mess.startsWith(Operations.DOWNLOAD.toString())) {
+
             }
         }
+
     }
 
     private void closeConnection() {
-        if (!socket.isClosed()) {
-            try {
-                socket.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+    }
+
+    public String getLogin() {
+        return login;
     }
 }

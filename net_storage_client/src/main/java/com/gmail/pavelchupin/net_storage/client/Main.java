@@ -1,16 +1,18 @@
 package com.gmail.pavelchupin.net_storage.client;
 
+import com.gmail.pavelchupin.net_storage.common.files.FileSerializable;
+import com.gmail.pavelchupin.net_storage.common.oper.Operations;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Properties;
 
-public class Main extends Application {
+public class Main /*extends Application*/ {
     private static final String SERVER_PORT = "server.port";
     private static final String SERVER_URL = "server.url";
 
@@ -27,26 +29,30 @@ public class Main extends Application {
         }
     }
 
-    @Override
+   /* @Override
     public void start(Stage primaryStage) throws Exception {
-        /*Parent root = FXMLLoader.load(getClass().getResource("/gui/main.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/gui/main.fxml"));
         primaryStage.setTitle("Net_Storage");
         primaryStage.setScene(new Scene(root, 300, 275));
-        primaryStage.show();*/
-    }
+        primaryStage.show();
+    }*/
 
 
     public static void main(String[] args) {
         //launch(args);
         try {
-            Socket socket = new Socket(prop.getProperty(SERVER_URL),Integer.parseInt(prop.getProperty(SERVER_PORT)));
+            Socket socket = new Socket(prop.getProperty(SERVER_URL), Integer.parseInt(prop.getProperty(SERVER_PORT)));
             in = new DataInputStream(socket.getInputStream());
             out = new DataOutputStream(socket.getOutputStream());
             Thread readThread = new Thread(new Runnable() {
                 @Override
                 public void run() {
+                    String text = null;
                     try {
-                        System.out.println(in.readUTF());
+                        while (true) {
+                            text = in.readUTF();
+                            System.out.println(text);
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -55,11 +61,21 @@ public class Main extends Application {
             readThread.setDaemon(true);
             readThread.start();
 
-            while (true){
+            //while (true) {
                 String text = new BufferedReader(new InputStreamReader(System.in)).readLine();
-                out.writeUTF(text);
-                //System.out.println(in.readUTF());
-            }
+                //out.writeUTF(text);
+
+                Path path = Paths.get("1", "2", "1.txt");
+                byte[] arr = Files.readAllBytes(path);
+                FileSerializable file = new FileSerializable(path.toString(), Files.size(path), 1, 1, arr);
+                ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+                ObjectOutput objOut = new ObjectOutputStream(byteOut);
+                objOut.writeObject(file);
+                out.writeUTF(Operations.UPLOAD + byteOut.toString());
+
+                objOut.close();
+                byteOut.close();
+            //}
         } catch (IOException e) {
             e.printStackTrace();
         }

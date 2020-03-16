@@ -11,6 +11,12 @@
 
     <artifactId>net_storage_client</artifactId>
 
-
-
+    <dependencies>
+        <dependency>
+            <groupId>com.gmail.pavelchupin.net_storage</groupId>
+            <artifactId>net_storage_common</artifactId>
+            <version>1.1</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
 </project>
