@@ -22,39 +22,35 @@ public class ClientHandler implements Runnable {
 
     @Override
     public void run() {
-        //Запускаем поток по чтению данных из потока от клиента
-        Thread readThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    readMess();
-                } catch (IOException e) {
-                    closeConnection();
+        try {
+            //Запускаем авторизацию.
+            Thread authorizationClient = new Thread(new Runnable() {
+                @Override
+                public void run() {
+
                 }
-            }
-        });
-        readThread.setDaemon(true);
-        readThread.start();
+            });
+            authorizationClient.start();
+            authorizationClient.join();
 
-        //Запускаем поток по записи данных в поток для клиента
-        /*Thread writeThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-
-                    writeMess();
-                } catch (IOException e) {
-                    closeConnection();
+            //Запускаем поток по чтению данных из потока от клиента
+            Thread readThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        readMess();
+                    } catch (IOException e) {
+                        closeConnection();
+                    }
                 }
-            }
-        });*/
-        //writeThread.setDaemon(true);
-        //writeThread.start();
-
-
-        while (true) {
-
+            });
+            readThread.setDaemon(true);
+            readThread.start();
+            readThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+
     }
 
     private void writeMess(String mess) throws IOException {
@@ -67,8 +63,7 @@ public class ClientHandler implements Runnable {
             mess = in.readUTF();
             System.out.println(mess);
 
-            if ("W".equalsIgnoreCase(mess.split(" ")[0]))
-            {
+            if ("W".equalsIgnoreCase(mess.split(" ")[0])) {
                 writeMess("ok");
             }
         }
