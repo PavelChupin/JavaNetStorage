@@ -22,6 +22,16 @@ public class ClientHandler implements Runnable {
 
     @Override
     public void run() {
+        try {
+            while (true) {
+                String mess = null;
+                mess = in.readUTF();
+                System.out.println(mess);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
     }
 }

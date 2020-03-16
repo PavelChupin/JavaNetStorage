@@ -14,11 +14,12 @@ import java.util.concurrent.Executors;
 
 public class Server {
     private static final String SERVER_PORT = "server.port";
+
     private static Properties prop = new Properties();
 
     static {
         try {
-            prop.load(new FileInputStream("/conf.properties"));
+            prop.load(new FileInputStream("D:/GitRepository/LearnGeekBrains/Курс четверть 2 - Разработка сетевого хранилища на Java/HomeWork/net_storage_server/src/main/resources/conf.properties"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -31,7 +32,10 @@ public class Server {
         try (ServerSocket serverSocket = new ServerSocket(Integer.parseInt(prop.getProperty(SERVER_PORT)))) {
             while (true) {
                 //Ожидаем подключение пользователей
+                System.out.println("Wait client connection...");
                 Socket socket = serverSocket.accept();
+                System.out.println("Client is connect...");
+
                 //Создаем объект клиентского подключения
                 ClientHandler clientHandler = new ClientHandler(socket, this);
                 //Добавляем и запускаем клиентский поток
