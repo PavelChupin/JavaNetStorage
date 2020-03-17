@@ -2,10 +2,16 @@ package com.gmail.pavelchupin.net_storage.server;
 
 import com.gmail.pavelchupin.net_storage.server.clienthandler.ClientHandler;
 
+import com.gmail.pavelchupin.net_storage.common.files.FileSerializable;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -47,6 +53,22 @@ public class Server {
             e.printStackTrace();
             //Если на сервере произошла ошибка гасим все клиентские потоки
             executorService.shutdownNow();
+
+        }
+    }
+
+    //Метод сохранения файлов на диск
+    public synchronized void saveFileToServer(FileSerializable file, ClientHandler clientHandler) throws IOException {
+        Path path = Paths.get(clientHandler.getLogin());
+        path.resolve(file.getPath());
+
+        System.out.println(path);
+        System.out.println(file);
+
+        if (Files.notExists(path)){
+            Files.write(path,file.getArr(), StandardOpenOption.CREATE_NEW);
+        }else{
+            Files.write(path,file.getArr(), StandardOpenOption.APPEND);
         }
     }
 }
