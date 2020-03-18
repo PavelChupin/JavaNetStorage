@@ -1,6 +1,6 @@
-package com.gmail.pavelchupin.net_storage.server;
+package com.gmail.pavelchupin.net_storage.server.io;
 
-import com.gmail.pavelchupin.net_storage.server.clienthandler.ClientHandler;
+import com.gmail.pavelchupin.net_storage.server.io.clienthandler.ClientHandler;
 
 import com.gmail.pavelchupin.net_storage.common.files.FileSerializable;
 

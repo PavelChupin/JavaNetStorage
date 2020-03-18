@@ -1,4 +1,4 @@
-package com.gmail.pavelchupin.net_storage.server;
+package com.gmail.pavelchupin.net_storage.server.io;
 
 public class Main {
 
