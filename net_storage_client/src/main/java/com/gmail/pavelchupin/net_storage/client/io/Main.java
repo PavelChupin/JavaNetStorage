@@ -1,4 +1,4 @@
-package com.gmail.pavelchupin.net_storage.client;
+package com.gmail.pavelchupin.net_storage.client.io;
 
 import com.gmail.pavelchupin.net_storage.common.files.FileSerializable;
 import com.gmail.pavelchupin.net_storage.common.oper.Operations;
@@ -88,13 +88,13 @@ public class Main /*extends Application*/ {
                     in.read(arr, 0, READ_COUNT_BYTE);
                 }
 
-                file = new FileSerializable(path.toString(), Files.size(path), part,partCount, arr);
+                file = new FileSerializable(path.toString(), Files.size(path), part,partCount, arr,Operations.UPLOAD);
 
                 //Сереализуем
                 objOut.writeObject(file);
                 System.out.println(byteOut.toString());
                 //Оправляем на сервер
-                out.writeUTF(Operations.UPLOAD + byteOut.toString());
+                out.writeUTF(/*Operations.UPLOAD + */byteOut.toString());
 
                 objOut.flush();
                 byteOut.flush();

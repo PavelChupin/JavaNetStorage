@@ -70,22 +70,22 @@ public class ClientHandler implements Runnable {
             System.out.println(mess);
             //System.out.println(mess.replaceFirst(Operations.UPLOAD.toString(), ""));
 
-            //Если прилетел запрос на закачку файла на сервер
-            if (mess.startsWith(Operations.UPLOAD.toString())) {
-                ByteArrayInputStream byteIn = new ByteArrayInputStream(mess.replaceFirst(Operations.UPLOAD.toString(), "").getBytes());
-                ObjectInputStream objIn = new ObjectInputStream(byteIn);
-                FileSerializable file = (FileSerializable) objIn.readObject();
+            //Десериализуем обьект
+            ByteArrayInputStream byteIn = new ByteArrayInputStream(mess.getBytes());
+            ObjectInputStream objIn = new ObjectInputStream(byteIn);
+            FileSerializable file = (FileSerializable) objIn.readObject();
+            objIn.close();
+            byteIn.close();
 
+            //Если прилетел запрос на закачку файла на сервер
+            if (file.getOper().equals(Operations.UPLOAD)) {
                 //Сохраняем файл на сервере
                 server.saveFileToServer(file, this);
-
-                objIn.close();
-                byteIn.close();
             } //Если прилетел запрос на скачку файла
-            else if (mess.startsWith(Operations.DOWNLOAD.toString())) {
+            else if (file.getOper().equals(Operations.DOWNLOAD)) {
 
             } //Если прилетел запрос на дерево каталогов.
-            else if (mess.startsWith(Operations.DIR.toString())) {
+            else if (file.getOper().equals(Operations.DIR)) {
 
             }
         }

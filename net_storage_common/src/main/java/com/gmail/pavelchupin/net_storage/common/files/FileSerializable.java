@@ -1,5 +1,7 @@
 package com.gmail.pavelchupin.net_storage.common.files;
 
+import com.gmail.pavelchupin.net_storage.common.oper.Operations;
+
 import java.io.Serializable;
 import java.util.Arrays;
 
@@ -11,23 +13,30 @@ public class FileSerializable implements Serializable /*Externalizable*/ {
     private int part;
     private int partCount;
     private byte[] arr;
+    private Operations oper;
 
-    public FileSerializable(String path, long lenght, int part, int partCount, byte[] arr) {
+    public FileSerializable(String path, long lenght, int part, int partCount, byte[] arr, Operations oper) {
         this.path = path;
         this.lenght = lenght;
         this.part = part;
         this.partCount = partCount;
         this.arr = arr;
+        this.oper = oper;
+    }
+
+    public Operations getOper() {
+        return oper;
     }
 
     @Override
     public String toString() {
-        return "File{" +
-                "path=" + path +
+        return "FileSerializable{" +
+                "path='" + path + '\'' +
                 ", lenght=" + lenght +
                 ", part=" + part +
                 ", partCount=" + partCount +
                 ", arr=" + Arrays.toString(arr) +
+                ", oper=" + oper +
                 '}';
     }
 
