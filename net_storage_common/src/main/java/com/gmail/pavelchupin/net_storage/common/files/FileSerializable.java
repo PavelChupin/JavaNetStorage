@@ -2,6 +2,8 @@ package com.gmail.pavelchupin.net_storage.common.files;
 
 import com.gmail.pavelchupin.net_storage.common.oper.Operations;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Arrays;
 
@@ -13,19 +15,13 @@ public class FileSerializable implements Serializable /*Externalizable*/ {
     private int part;
     private int partCount;
     private byte[] arr;
-    private Operations oper;
 
-    public FileSerializable(String path, long lenght, int part, int partCount, byte[] arr, Operations oper) {
+    public FileSerializable(String path, long lenght, int part, int partCount, byte[] arr) {
         this.path = path;
         this.lenght = lenght;
         this.part = part;
         this.partCount = partCount;
         this.arr = arr;
-        this.oper = oper;
-    }
-
-    public Operations getOper() {
-        return oper;
     }
 
     @Override
@@ -36,7 +32,6 @@ public class FileSerializable implements Serializable /*Externalizable*/ {
                 ", part=" + part +
                 ", partCount=" + partCount +
                 ", arr=" + Arrays.toString(arr) +
-                ", oper=" + oper +
                 '}';
     }
 
@@ -59,6 +54,8 @@ public class FileSerializable implements Serializable /*Externalizable*/ {
     public byte[] getArr() {
         return arr;
     }
+
+
 /*
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {

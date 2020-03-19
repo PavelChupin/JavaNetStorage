@@ -1,5 +1,6 @@
 package com.gmail.pavelchupin.net_storage.server.io.clienthandler;
 
+import com.gmail.pavelchupin.net_storage.common.ObjectSerialization;
 import com.gmail.pavelchupin.net_storage.common.files.FileSerializable;
 import com.gmail.pavelchupin.net_storage.common.oper.Operations;
 import com.gmail.pavelchupin.net_storage.server.io.Server;
@@ -62,34 +63,35 @@ public class ClientHandler implements Runnable {
         out.writeUTF(mess);
     }
 
-    private void readMess() throws IOException, ClassNotFoundException {
+    private void readMess() throws ClassNotFoundException, IOException {
         String mess = null;
+
         while (true) {
             mess = in.readUTF();
-
             System.out.println(mess);
             //System.out.println(mess.replaceFirst(Operations.UPLOAD.toString(), ""));
 
             //Десериализуем обьект
-            ByteArrayInputStream byteIn = new ByteArrayInputStream(mess.getBytes());
-            ObjectInputStream objIn = new ObjectInputStream(byteIn);
-            FileSerializable file = (FileSerializable) objIn.readObject();
-            objIn.close();
-            byteIn.close();
+            try (ByteArrayInputStream byteIn = new ByteArrayInputStream(mess.getBytes());
+                 ObjectInputStream objIn = new ObjectInputStream(byteIn)){
 
-            //Если прилетел запрос на закачку файла на сервер
-            if (file.getOper().equals(Operations.UPLOAD)) {
-                //Сохраняем файл на сервере
-                server.saveFileToServer(file, this);
-            } //Если прилетел запрос на скачку файла
-            else if (file.getOper().equals(Operations.DOWNLOAD)) {
+                ObjectSerialization objSer = (ObjectSerialization) objIn.readObject();
 
-            } //Если прилетел запрос на дерево каталогов.
-            else if (file.getOper().equals(Operations.DIR)) {
+                //Если прилетел запрос на закачку файла на сервер
+                switch (objSer.getOper()){
+                    case UPLOAD: {
+                        //Сохраняем файл на сервере
+                        server.saveFileToServer(objSer.getFile(), this);
+                        break;
+                    }
+                    case DIR:{
 
+                    }
+                }
+            } catch (IOException e) {
+                throw e;
             }
         }
-
     }
 
     private void closeConnection() {
