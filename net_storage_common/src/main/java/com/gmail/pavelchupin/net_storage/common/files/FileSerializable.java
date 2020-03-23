@@ -1,9 +1,5 @@
 package com.gmail.pavelchupin.net_storage.common.files;
 
-import com.gmail.pavelchupin.net_storage.common.oper.Operations;
-
-import java.io.Closeable;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.Arrays;
 

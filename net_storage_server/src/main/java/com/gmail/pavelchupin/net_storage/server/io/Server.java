@@ -64,10 +64,10 @@ public class Server {
         System.out.println(path);
         System.out.println(file);
 
-        if (Files.notExists(path)){
-            Files.write(path,file.getArr(), StandardOpenOption.CREATE_NEW);
-        }else{
-            Files.write(path,file.getArr(), StandardOpenOption.APPEND);
+        if (Files.notExists(path)) {
+            Files.write(path, file.getArr(), StandardOpenOption.CREATE_NEW);
+        } else {
+            Files.write(path, file.getArr(), StandardOpenOption.APPEND);
         }
     }
 }

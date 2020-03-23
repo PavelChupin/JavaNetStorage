@@ -1,8 +1,6 @@
 package com.gmail.pavelchupin.net_storage.server.io.clienthandler;
 
 import com.gmail.pavelchupin.net_storage.common.ObjectSerialization;
-import com.gmail.pavelchupin.net_storage.common.files.FileSerializable;
-import com.gmail.pavelchupin.net_storage.common.oper.Operations;
 import com.gmail.pavelchupin.net_storage.server.io.Server;
 
 import java.io.*;
@@ -73,18 +71,18 @@ public class ClientHandler implements Runnable {
 
             //Десериализуем обьект
             try (ByteArrayInputStream byteIn = new ByteArrayInputStream(mess.getBytes());
-                 ObjectInputStream objIn = new ObjectInputStream(byteIn)){
+                 ObjectInputStream objIn = new ObjectInputStream(byteIn)) {
 
                 ObjectSerialization objSer = (ObjectSerialization) objIn.readObject();
 
                 //Если прилетел запрос на закачку файла на сервер
-                switch (objSer.getOper()){
+                switch (objSer.getOper()) {
                     case UPLOAD: {
                         //Сохраняем файл на сервере
                         server.saveFileToServer(objSer.getFile(), this);
                         break;
                     }
-                    case DIR:{
+                    case DIR: {
 
                     }
                 }
