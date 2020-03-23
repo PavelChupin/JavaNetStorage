@@ -1,5 +1,9 @@
 package com.gmail.pavelchupin.net_storage.common.files;
 
+import com.gmail.pavelchupin.net_storage.common.oper.Operations;
+
+import java.io.Closeable;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Arrays;
 
@@ -22,8 +26,8 @@ public class FileSerializable implements Serializable /*Externalizable*/ {
 
     @Override
     public String toString() {
-        return "File{" +
-                "path=" + path +
+        return "FileSerializable{" +
+                "path='" + path + '\'' +
                 ", lenght=" + lenght +
                 ", part=" + part +
                 ", partCount=" + partCount +
@@ -50,6 +54,8 @@ public class FileSerializable implements Serializable /*Externalizable*/ {
     public byte[] getArr() {
         return arr;
     }
+
+
 /*
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {

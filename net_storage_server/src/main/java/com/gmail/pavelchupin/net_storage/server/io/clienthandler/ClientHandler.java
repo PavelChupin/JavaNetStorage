@@ -1,5 +1,6 @@
 package com.gmail.pavelchupin.net_storage.server.io.clienthandler;
 
+import com.gmail.pavelchupin.net_storage.common.ObjectSerialization;
 import com.gmail.pavelchupin.net_storage.common.files.FileSerializable;
 import com.gmail.pavelchupin.net_storage.common.oper.Operations;
 import com.gmail.pavelchupin.net_storage.server.io.Server;
@@ -62,34 +63,35 @@ public class ClientHandler implements Runnable {
         out.writeUTF(mess);
     }
 
-    private void readMess() throws IOException, ClassNotFoundException {
+    private void readMess() throws ClassNotFoundException, IOException {
         String mess = null;
+
         while (true) {
             mess = in.readUTF();
-
             System.out.println(mess);
             //System.out.println(mess.replaceFirst(Operations.UPLOAD.toString(), ""));
 
-            //Если прилетел запрос на закачку файла на сервер
-            if (mess.startsWith(Operations.UPLOAD.toString())) {
-                ByteArrayInputStream byteIn = new ByteArrayInputStream(mess.replaceFirst(Operations.UPLOAD.toString(), "").getBytes());
-                ObjectInputStream objIn = new ObjectInputStream(byteIn);
-                FileSerializable file = (FileSerializable) objIn.readObject();
+            //Десериализуем обьект
+            try (ByteArrayInputStream byteIn = new ByteArrayInputStream(mess.getBytes());
+                 ObjectInputStream objIn = new ObjectInputStream(byteIn)){
 
-                //Сохраняем файл на сервере
-                server.saveFileToServer(file, this);
+                ObjectSerialization objSer = (ObjectSerialization) objIn.readObject();
 
-                objIn.close();
-                byteIn.close();
-            } //Если прилетел запрос на скачку файла
-            else if (mess.startsWith(Operations.DOWNLOAD.toString())) {
+                //Если прилетел запрос на закачку файла на сервер
+                switch (objSer.getOper()){
+                    case UPLOAD: {
+                        //Сохраняем файл на сервере
+                        server.saveFileToServer(objSer.getFile(), this);
+                        break;
+                    }
+                    case DIR:{
 
-            } //Если прилетел запрос на дерево каталогов.
-            else if (mess.startsWith(Operations.DIR.toString())) {
-
+                    }
+                }
+            } catch (IOException e) {
+                throw e;
             }
         }
-
     }
 
     private void closeConnection() {

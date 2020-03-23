@@ -1,8 +1,7 @@
 package com.gmail.pavelchupin.net_storage.server.io;
 
-import com.gmail.pavelchupin.net_storage.server.io.clienthandler.ClientHandler;
-
 import com.gmail.pavelchupin.net_storage.common.files.FileSerializable;
+import com.gmail.pavelchupin.net_storage.server.io.clienthandler.ClientHandler;
 
 import java.io.FileInputStream;
 import java.io.IOException;
