@@ -111,8 +111,7 @@ public class Client {
                 }
 
                 ObjectSerialization file = new ObjectSerialization(Operations.UPLOAD
-                        , new FileSerializable(path.toString(), Files.size(path), part, partCount, arr)
-                        , null);
+                        , new FileSerializable(path.toString(), Files.size(path), part, partCount, arr));
 
                 //Сереализуем и отправляем на сервер
                 objOut.writeObject(file);

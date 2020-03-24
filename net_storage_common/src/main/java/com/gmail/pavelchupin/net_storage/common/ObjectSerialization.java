@@ -11,10 +11,14 @@ public class ObjectSerialization implements Serializable {
     private FileSerializable file;
     private Map<String, String> dir;
 
-    public ObjectSerialization(Operations oper, FileSerializable file, Map<String, String> dir) {
+    public ObjectSerialization(Operations oper, Map<String, String> dir) {
+        this.oper = oper;
+        this.dir = dir;
+    }
+
+    public ObjectSerialization(Operations oper, FileSerializable file) {
         this.oper = oper;
         this.file = file;
-        this.dir = dir;
     }
 
     public Operations getOper() {
