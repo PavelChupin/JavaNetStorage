@@ -1,21 +1,27 @@
 package com.gmail.pavelchupin.net_storage.client.io;
 
-import com.gmail.pavelchupin.net_storage.client.netty.Client;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
-public class Main /*extends Application*/ {
-
-
-   /* @Override
-    public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/gui/main.fxml"));
-        primaryStage.setTitle("Net_Storage");
-        primaryStage.setScene(new Scene(root, 300, 275));
+public class Main extends Application {
+    @Override
+    public void start(Stage primaryStage) throws Exception{
+        Parent root = FXMLLoader.load(getClass().getResource("gui/main.fxml"));
+        primaryStage.setTitle("GeekBrains Net Storage Client");
+        primaryStage.setScene(new Scene(root, 800, 600));
         primaryStage.show();
-    }*/
-
+    }
 
     public static void main(String[] args) {
-        new Client().start();
-        //launch(args);
+        launch(args);
+        //new Client().start();
     }
 }
+
+
+
+
+

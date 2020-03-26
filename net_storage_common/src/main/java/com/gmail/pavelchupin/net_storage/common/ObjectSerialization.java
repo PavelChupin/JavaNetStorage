@@ -32,4 +32,13 @@ public class ObjectSerialization implements Serializable {
     public Map<String, String> getDir() {
         return dir;
     }
+
+    @Override
+    public String toString() {
+        return "ObjectSerialization{" +
+                "oper=" + oper +
+                ", file=" + file +
+                ", dir=" + dir +
+                '}';
+    }
 }

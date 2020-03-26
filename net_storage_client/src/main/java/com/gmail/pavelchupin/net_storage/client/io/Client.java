@@ -4,12 +4,10 @@ package com.gmail.pavelchupin.net_storage.client.io;
 import com.gmail.pavelchupin.net_storage.common.ObjectSerialization;
 import com.gmail.pavelchupin.net_storage.common.files.FileSerializable;
 import com.gmail.pavelchupin.net_storage.common.oper.Operations;
-import io.netty.handler.codec.serialization.ObjectDecoderInputStream;
 import io.netty.handler.codec.serialization.ObjectEncoderOutputStream;
 
 import java.io.*;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -24,6 +22,7 @@ public class Client {
     private static Properties prop = new Properties();
     private OutputStream out;
     private InputStream in;
+    private Socket socket;
 
     static {
         try {
@@ -34,11 +33,10 @@ public class Client {
     }
 
     public Client() {
-        try (Socket socket = new Socket(prop.getProperty(SERVER_URL), Integer.parseInt(prop.getProperty(SERVER_PORT)))) {
+        try {
+            this.socket = new Socket(prop.getProperty(SERVER_URL), Integer.parseInt(prop.getProperty(SERVER_PORT)));
             this.in = socket.getInputStream();
             this.out = socket.getOutputStream();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -49,7 +47,7 @@ public class Client {
         Thread readMessFromServer = new Thread(() -> {
             while (true) {
                 //Читаем сообщение и произвыодим десериализацию.
-                try (ObjectInput objectInput = new ObjectDecoderInputStream(in)) {
+                /*try (ObjectInput objectInput = new ObjectDecoderInputStream(in)) {
                     ObjectSerialization objSer = (ObjectSerialization) objectInput.readObject();
                     switch (objSer.getOper()) {
                         case DOWNLOAD: {
@@ -65,16 +63,22 @@ public class Client {
                     e.printStackTrace();
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
-                }
+                }*/
             }
         });
         readMessFromServer.setDaemon(true);
         readMessFromServer.start();
 
+        //Отправим содержимое файла на сервер
+        Path p = Paths.get("1", "2", "1.txt");
+        sendFileToServer(p);
+
         //Запускаем бесконечный цикл нашей клиентской части
         while (true) {
 
         }
+
+
     }
 
     //Метод скачивания файла и его частей с сервера
@@ -91,9 +95,10 @@ public class Client {
     //Метод отправки файла на сервер
     private void sendFileToServer(Path path) {
         try (InputStream inputStream = new FileInputStream(path.toFile());
-             ObjectOutput objOut = new ObjectEncoderOutputStream(out)) {
+             ObjectOutput objOut = new ObjectEncoderOutputStream(out)
+        ) {
             //Создаем массив для чтения файла
-            byte[] arr = new byte[READ_COUNT_BYTE];
+           byte[] arr = new byte[READ_COUNT_BYTE];
 
             int part = 0;
             //Считаем количества частей файла

@@ -3,6 +3,8 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<GridPane fx:controller="com.gmail.pavelchupin.net_storage.client.io.Controller"
+
+<GridPane fx:controller="com.gmail.pavelchupin.net_storage.client.gui.Controller"
           xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10">
+
 </GridPane>
