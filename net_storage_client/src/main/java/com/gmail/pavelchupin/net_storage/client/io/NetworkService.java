@@ -40,17 +40,24 @@ public class NetworkService implements INetworkService {
             this.socket = new Socket(prop.getProperty(SERVER_URL), Integer.parseInt(prop.getProperty(SERVER_PORT)));
             this.in = socket.getInputStream();
             this.out = socket.getOutputStream();
+
+            //Запускае взаимодействие нашей клиентской части с сервером
+            Thread startClient = new Thread(this::start);
+            startClient.setDaemon(true);
+            startClient.start();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public void start() {
-        //Запускаем поток чтения сообщений от сервера
+        //Запускаем бесконечный цикл нашей клиентской части
+        while (true) {
+        /*//Запускаем поток чтения сообщений от сервера
         Thread readMessFromServer = new Thread(() -> {
             while (true) {
                 //Читаем сообщение и произвыодим десериализацию.
-                /*try (ObjectInput objectInput = new ObjectDecoderInputStream(in)) {
+                try (ObjectInput objectInput = new ObjectDecoderInputStream(in)) {
                     ObjectSerialization objSer = (ObjectSerialization) objectInput.readObject();
                     switch (objSer.getOper()) {
                         case DOWNLOAD: {
@@ -66,22 +73,18 @@ public class NetworkService implements INetworkService {
                     e.printStackTrace();
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
-                }*/
+                }
             }
         });
         readMessFromServer.setDaemon(true);
         readMessFromServer.start();
+*/
+            //Отправим содержимое файла на сервер
+            Path p = Paths.get("1", "2", "1.txt");
+            sendFileToServer(p);
 
-        //Отправим содержимое файла на сервер
-        Path p = Paths.get("1", "2", "1.txt");
-        sendFileToServer(p);
-
-        //Запускаем бесконечный цикл нашей клиентской части
-        while (true) {
 
         }
-
-
     }
 
     //Метод скачивания файла и его частей с сервера
@@ -130,5 +133,9 @@ public class NetworkService implements INetworkService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void getDir(){
+
     }
 }

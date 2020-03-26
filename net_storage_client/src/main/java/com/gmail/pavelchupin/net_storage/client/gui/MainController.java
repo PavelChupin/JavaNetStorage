@@ -24,8 +24,7 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        //this.networkService = new NetworkService(this);
-        //this.networkService.start();
+        this.networkService = new NetworkService(this);
     }
 
     @FXML
