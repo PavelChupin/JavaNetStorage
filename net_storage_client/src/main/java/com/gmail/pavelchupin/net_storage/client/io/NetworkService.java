@@ -1,6 +1,6 @@
 package com.gmail.pavelchupin.net_storage.client.io;
 
-
+import com.gmail.pavelchupin.net_storage.client.gui.MainController;
 import com.gmail.pavelchupin.net_storage.common.ObjectSerialization;
 import com.gmail.pavelchupin.net_storage.common.files.FileSerializable;
 import com.gmail.pavelchupin.net_storage.common.oper.Operations;
@@ -14,7 +14,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Properties;
 
-public class Client {
+public class NetworkService implements INetworkService {
     private static final String SERVER_PORT = "server.port";
     private static final String SERVER_URL = "server.url";
     private static final int READ_COUNT_BYTE = 10;
@@ -32,8 +32,17 @@ public class Client {
         }
     }
 
-    public Client() {
+    private MainController controller;
 
+    public NetworkService(MainController controller) {
+        try {
+            this.controller = controller;
+            this.socket = new Socket(prop.getProperty(SERVER_URL), Integer.parseInt(prop.getProperty(SERVER_PORT)));
+            this.in = socket.getInputStream();
+            this.out = socket.getOutputStream();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void start() {
@@ -92,7 +101,7 @@ public class Client {
              ObjectOutput objOut = new ObjectEncoderOutputStream(out)
         ) {
             //Создаем массив для чтения файла
-           byte[] arr = new byte[READ_COUNT_BYTE];
+            byte[] arr = new byte[READ_COUNT_BYTE];
 
             int part = 0;
             //Считаем количества частей файла

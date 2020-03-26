@@ -1,4 +1,4 @@
-package com.gmail.pavelchupin.net_storage.client.io;
+package com.gmail.pavelchupin.net_storage.client;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -9,8 +9,8 @@ import javafx.stage.Stage;
 public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("gui/main.fxml"));
-        primaryStage.setTitle("GeekBrains Net Storage Client");
+        Parent root = FXMLLoader.load(getClass().getResource("/gui/main.fxml"));
+        primaryStage.setTitle("Net Storage Client");
         primaryStage.setScene(new Scene(root, 800, 600));
         primaryStage.show();
     }
